@@ -21,10 +21,7 @@ div_new.innerHTML = `
         <p><strong>User: </strong>
           <input type="text" id="new_user" value="">
         </p>
-        <p><strong>Rating: </strong>
-          <input type="number" id="new_rating" min="1" max="5" value="3">
-        </p>
-        <p><a href="#" onclick="saveReview('new_review', 'new_user', 'new_rating')">💾</a>
+        <p><a href="#" onclick="saveReview('new_review', 'new_user')">save</a>
         </p>
       </div>
     </div>
@@ -47,8 +44,7 @@ function returnReviews(url) {
               <div class="card" id="${review._id}">
                 <p><strong>Review: </strong>${review.review}</p>
                 <p><strong>User: </strong>${review.user}</p>
-                <p><strong>Rating: </strong>${review.rating}</p>
-                <p><a href="#" onclick="editReview('${review._id}','${review.review}', '${review.user}', '${review.rating}')">✏️</a> <a href="#" onclick="deleteReview('${review._id}')">🗑</a></p>
+                <p><a href="#" onclick="editReview('${review._id}','${review.review}', '${review.user}')">✏️</a> <a href="#" onclick="deleteReview('${review._id}')">🗑</a></p>
               </div>
             </div>
           </div>
@@ -63,7 +59,6 @@ function editReview(id, review, user, rating) {
   const element = document.getElementById(id);
   const reviewInputId = "review" + id;
   const userInputId = "user" + id;
-  const ratingInputId = "rating" + id;
 
   element.innerHTML = `
     <p><strong>Review: </strong>
@@ -72,18 +67,14 @@ function editReview(id, review, user, rating) {
     <p><strong>User: </strong>
       <input type="text" id="${userInputId}" value="${user}">
     </p>
-    <p><strong>Rating: </strong>
-      <input type="number" id="${ratingInputId}" min="1" max="5" value="${rating}">
-    </p>
-    <p><a href="#" onclick="saveReview('${reviewInputId}', '${userInputId}', '${ratingInputId}', '${id}')">💾</a>
+    <p><a href="#" onclick="saveReview('${reviewInputId}', '${userInputId}',  '${id}')">save</a>
     </p>
   `
 }
 
-function saveReview(reviewInputId, userInputId, ratingInputId, id = "") {
+function saveReview(reviewInputId, userInputId,  id = "") {
   const review = document.getElementById(reviewInputId).value;
   const user = document.getElementById(userInputId).value;
-  const rating = document.getElementById(ratingInputId).value;
 
   if (id) {
     fetch(APILINK + id, {
@@ -92,7 +83,7 @@ function saveReview(reviewInputId, userInputId, ratingInputId, id = "") {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ "user": user, "review": review, "rating": rating })
+      body: JSON.stringify({ "user": user, "review": review })
     }).then(res => res.json())
       .then(res => {
         console.log(res)
@@ -105,7 +96,7 @@ function saveReview(reviewInputId, userInputId, ratingInputId, id = "") {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ "user": user, "review": review, "movieId": movieId, "rating": rating })
+      body: JSON.stringify({ "user": user, "review": review, "movieId": movieId })
     }).then(res => res.json())
       .then(res => {
         console.log(res)
